@@ -4,7 +4,7 @@
 //var token = "T1==cGFydG5lcl9pZD00NjEwNDY1MiZzaWc9NmViZThmODVlMzkzOTIzN2JhOTQzNmQxMTc0MjlhYjcyOTcyMzYyYzpzZXNzaW9uX2lkPTJfTVg0ME5qRXdORFkxTW41LU1UVXlORFU1TnpNek56RXhOWDVxWmtKclRVcE5TMDh6Tm1aRGFHVkhiMEZ6YTBOcloxSi1mZyZjcmVhdGVfdGltZT0xNTI0NTk3MzU4Jm5vbmNlPTAuMTM1MTY0MDE1Mzc3NDExMTgmcm9sZT1wdWJsaXNoZXImZXhwaXJlX3RpbWU9MTUyNDYwMDk1NyZpbml0aWFsX2xheW91dF9jbGFzc19saXN0PQ==";
 
 // (optional) add server code here
-    var SERVER_BASE_URL = 'https://mh-opentok-sandbox.azurewebsites.net';
+    var SERVER_BASE_URL = 'https://mh-opentok-sandbox.herokuapp.com/';
     fetch(SERVER_BASE_URL + '/session').then(function(res) {
       return res.json()
     }).then(function(res) {
