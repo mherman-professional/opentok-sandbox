@@ -1,5 +1,7 @@
 // declare session variable outside of initializeSession so it can be accessed for signaling
 var session;
+var connectionList = [];
+var connectionCount = 0;
 
 // create a session object
 function initializeSession() {
@@ -15,6 +17,11 @@ function initializeSession() {
   });
 
   session.on('sessionDisconnected', handleError);
+  // remove recipient selector option when client closes the connection
+  session.on('connectionDestroyed', function(event) {
+    var dropConnection = session.connection;
+    document.getElementById(dropConnection.id).remove();
+  });
 
   // Create a publisher
   var publisher = OT.initPublisher('publisher', {
@@ -33,6 +40,17 @@ function initializeSession() {
     }
   });
 
+  // when a new connection is created add a new option to the recipient selection list
+  session.on("connectionCreated", function(event) {
+   var newConnection = session.connection;
+   ++connectionCount;
+   connectionList[newConnection.id] = newConnection;
+   document.getElementById('recipient').innerHTML += '<option id="' + newConnection.id + '" value="' + newConnection.id + '">Recipient ' + connectionCount + '</option>';
+ });
+ session.on("sessionConnected", function(event) {
+  console.log(session);
+});
+
   // Add a new message to the thread
   var txtThread = document.getElementById('thread');
   session.on('signal:msg', function signalCallback(event) {
@@ -47,31 +65,40 @@ function initializeSession() {
 var form = document.getElementById('chatForm');
 var msgTxt = document.getElementById('msgTxt');
 
+// When the filter selector changes we update the selectedFilter
+var recipientId = 'all';
+var recipientSel = document.querySelector('#recipient');
+recipientSel.addEventListener('change', function change() {
+    recipientId = recipientSel.value;
+});
+
 form.addEventListener('submit', function submit(event) {
   event.preventDefault();
 
-  session.signal({
-    type: 'msg',
-    data: msgTxt.value
-  }, function signalCallback(error) {
-    if (error) {
-      console.error('Error sending signal:', error.name, error.message);
-    } else {
-      msgTxt.value = '';
-    }
-  });
-
-  /*
-  session.signal({
-    type: 'msg',
-    to: //connection object
-    data: msgTxt.value
-  }, function signalCallback(error) {
-    if (error) {
-      console.error('Error sending signal:', error.name, error.message);
-    } else {
-      msgTxt.value = '';
-    }
-  });*/
-
+  if(recipientId == 'all') {
+    session.signal({
+      type: 'msg',
+      data: msgTxt.value
+    }, function signalCallback(error) {
+      if (error) {
+        console.error('Error sending signal:', error.name, error.message);
+      } else {
+        msgTxt.value = '';
+      }
+    });
+  }
+  else {
+    var toRecipient = connectionList[recipientId];
+    session.signal({
+      type: 'msg',
+      to: toRecipient,
+      data: msgTxt.value
+    }, function signalCallback(error) {
+      if (error) {
+        console.error('Error sending signal:', error.name, error.message);
+      } else {
+        msgTxt.value = '';
+      }
+    });
+  }
 });

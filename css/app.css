@@ -37,8 +37,14 @@ body, html {
 }
 #thread {
      width: 100%;
-     height: calc(100% - 40px);
+     height: calc(100% - 80px);
      overflow: auto;
+}
+#recipient {
+  height: 40px;
+  position: absolute;
+  bottom: 40px;
+  width: 100%;
 }
 input#msgTxt {
             height: 40px;
