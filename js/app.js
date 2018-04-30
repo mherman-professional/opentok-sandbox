@@ -1,9 +1,9 @@
-// declare session variable outside of initializeSession so it can be accessed for signaling
+// Declare session variable outside of initializeSession so it can be accessed for signaling
 var session;
 var connectionList = [];
 var connectionCount = 0;
 
-// create a session object
+// Create a session object
 function initializeSession() {
   session = OT.initSession(apiKey, sessionId);
 
@@ -17,10 +17,10 @@ function initializeSession() {
   });
 
   session.on('sessionDisconnected', handleError);
-  // remove recipient selector option when client closes the connection
+  // Remove recipient selector option when client closes the connection
   session.on('connectionDestroyed', function(event) {
-    var dropConnection = session.connection;
-    document.getElementById(dropConnection.id).remove();
+    var dropConnection = event.connection.id;
+    document.getElementById(dropConnection).remove();
   });
 
   // Create a publisher
@@ -40,16 +40,13 @@ function initializeSession() {
     }
   });
 
-  // when a new connection is created add a new option to the recipient selection list
+  // When a new connection is created add a new option to the recipient selection list
   session.on("connectionCreated", function(event) {
-   var newConnection = session.connection;
+   var newConnection = event.connection;
    ++connectionCount;
    connectionList[newConnection.id] = newConnection;
    document.getElementById('recipient').innerHTML += '<option id="' + newConnection.id + '" value="' + newConnection.id + '">Recipient ' + connectionCount + '</option>';
  });
- session.on("sessionConnected", function(event) {
-  console.log(session);
-});
 
   // Add a new message to the thread
   var txtThread = document.getElementById('thread');
@@ -75,6 +72,7 @@ recipientSel.addEventListener('change', function change() {
 form.addEventListener('submit', function submit(event) {
   event.preventDefault();
 
+  // If send to all is selected send the signal to all clients, otherwise send it only to the selected recipient and the original sender
   if(recipientId == 'all') {
     session.signal({
       type: 'msg',
@@ -89,9 +87,21 @@ form.addEventListener('submit', function submit(event) {
   }
   else {
     var toRecipient = connectionList[recipientId];
+    var signalSender = session.connection;
     session.signal({
       type: 'msg',
       to: toRecipient,
+      data: msgTxt.value
+    }, function signalCallback(error) {
+      if (error) {
+        console.error('Error sending signal:', error.name, error.message);
+      } else {
+        msgTxt.value = '';
+      }
+    });
+    session.signal({
+      type: 'msg',
+      to: signalSender,
       data: msgTxt.value
     }, function signalCallback(error) {
       if (error) {
