@@ -42,10 +42,14 @@ function initializeSession() {
 
   // When a new connection is created add a new option to the recipient selection list
   session.on("connectionCreated", function(event) {
-   var newConnection = event.connection;
-   ++connectionCount;
-   connectionList[newConnection.id] = newConnection;
-   document.getElementById('recipient').innerHTML += '<option id="' + newConnection.id + '" value="' + newConnection.id + '">Recipient ' + connectionCount + '</option>';
+    ++connectionCount;
+    var newConnection = event.connection;
+    var selectOption = document.createElement('option');
+    connectionList[newConnection.id] = newConnection;
+    selectOption.setAttribute('id', newConnection.id);
+    selectOption.setAttribute('value', newConnection.id);
+    selectOption.innerHTML = 'Recipient ' + connectionCount;
+    document.getElementById('recipient').appendChild(selectOption);
  });
 
   // Add a new message to the thread
@@ -62,7 +66,7 @@ function initializeSession() {
 var form = document.getElementById('chatForm');
 var msgTxt = document.getElementById('msgTxt');
 
-// When the filter selector changes we update the selectedFilter
+// When the recipient selector changes we update the recipientId
 var recipientId = 'all';
 var recipientSel = document.querySelector('#recipient');
 recipientSel.addEventListener('change', function change() {
@@ -72,7 +76,7 @@ recipientSel.addEventListener('change', function change() {
 form.addEventListener('submit', function submit(event) {
   event.preventDefault();
 
-  // If send to all is selected send the signal to all clients, otherwise send it only to the selected recipient and the original sender
+  // If "send to all" is selected send the signal to all clients, otherwise send it only to the selected recipient and the original sender
   if(recipientId == 'all') {
     session.signal({
       type: 'msg',

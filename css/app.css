@@ -1,44 +1,44 @@
 body, html {
-    background-color: gray;
-    height: 100%;
+  background-color: gray;
+  height: 100%;
 }
 #videos {
-    position: relative;
-    width: 70%;
-    height: 100%;
-    float: left;
+  position: relative;
+  width: 70%;
+  height: 100%;
+  float: left;
 }
 #subscriber {
-    position: absolute;
-    left: 0;
-    top: 0;
-    width: 100%;
-    height: 100%;
-    margin-left: 50px;
-    z-index: 10;
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  margin-left: 50px;
+  z-index: 10;
 }
 #publisher {
-    position: absolute;
-    width: 360px;
-    height: 240px;
-    bottom: 10px;
-    left: 10px;
-    z-index: 100;
-    border: 3px solid white;
-    border-radius: 3px;
+  position: absolute;
+  width: 360px;
+  height: 240px;
+  bottom: 10px;
+  left: 10px;
+  z-index: 100;
+  border: 3px solid #f78c27;
+  border-radius: 3px;
 }
 #chatbox {
-    position: relative;
-    width: 20%;
-    float: right;
-    right: 0;
-    height: 100%;
-    background-color: #333;
+  position: relative;
+  width: 20%;
+  float: right;
+  right: 0;
+  height: 100%;
+  background-color: #333;
 }
 #thread {
-     width: 100%;
-     height: calc(100% - 80px);
-     overflow: auto;
+  width: 100%;
+  height: calc(100% - 80px);
+  overflow: auto;
 }
 #recipient {
   height: 40px;
@@ -47,17 +47,19 @@ body, html {
   width: 100%;
 }
 input#msgTxt {
-            height: 40px;
-            position: absolute;
-            bottom: 0;
-            width: 100%;
+  height: 40px;
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  border: 0px;
+  padding: 0px;
 }
 #thread .mine {
-    color: #00FF00;
-    text-align: right;
-    margin-right: 10px;
+  color: #f78c27;
+  text-align: right;
+  margin-right: 10px;
 }
 #thread .theirs {
-    color: #00FFFF;
-    margin-left: 10px;
+  color: #ccc2b9;
+  margin-left: 10px;
 }
