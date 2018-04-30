@@ -103,16 +103,18 @@ form.addEventListener('submit', function submit(event) {
         msgTxt.value = '';
       }
     });
-    session.signal({
-      type: 'msg',
-      to: signalSender,
-      data: msgTxt.value
-    }, function signalCallback(error) {
-      if (error) {
-        console.error('Error sending signal:', error.name, error.message);
-      } else {
-        msgTxt.value = '';
-      }
-    });
+    if (signalSender.id != recipientId) {
+      session.signal({
+        type: 'msg',
+        to: signalSender,
+        data: msgTxt.value
+      }, function signalCallback(error) {
+        if (error) {
+          console.error('Error sending signal:', error.name, error.message);
+        } else {
+          msgTxt.value = '';
+        }
+      });
+    }
   }
 });
